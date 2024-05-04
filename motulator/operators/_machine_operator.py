@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from motulator.model._machine_models import InductionMachine, InductionMachineInvGamma
 
 class MachineOperator(ABC):
     
@@ -18,7 +19,7 @@ class MachineOperator(ABC):
 
 class InductionMachineOperator(MachineOperator):
     
-    def calculate_currents(self) -> str:
+    def calculate_currents(self, machine: InductionMachine):
         """
         Compute the stator and rotor currents.
 
@@ -37,7 +38,7 @@ class InductionMachineOperator(MachineOperator):
             Rotor current (A).
 
         """
-        return "hello"
+        return 
     
     
     def f(self) -> str:
@@ -45,3 +46,18 @@ class InductionMachineOperator(MachineOperator):
     
     def measure_phase_currents(self) -> str:
         return "Measure currents"
+    
+    def calculate_gamma(self, L_M, L_sgm) -> float:
+        """
+        Calculate the magnetic coupling factor
+        """
+        return L_M/(L_M + L_sgm)
+
+    def convert_to_gamma_parameters(self, inv_gamma: InductionMachineInvGamma) -> InductionMachine:
+        """
+        Convert the inverse-Γ parameters to the Γ parameters
+        """
+        gamma = self.calculate_gamma(inv_gamma.L_M, inv_gamma.L_sgm)
+        return InductionMachine(inv_gamma.n_p, inv_gamma.R_s, 
+                                inv_gamma.R_s/gamma**2, inv_gamma.L_sgm/gamma, 
+                                inv_gamma.L_M + inv_gamma.L_sgm)
