@@ -37,3 +37,7 @@ class BaseOperations:
         L = BaseOperations.calculate_inductance_from_impedance_angular_freq(Z, w)
         tau = BaseOperations.calculate_torque_from_power_angular_freq(p, w, nom_values.n_p)
         return BaseValues(u, i, w, psi, p, Z, L, tau)
+    
+
+class InverterOperations:
+    pass
