@@ -1,4 +1,4 @@
-"""Grid-following control methods."""
+"""Open Loop control method for Current-Source Converters."""
 
 from cmath import exp
 from dataclasses import dataclass
@@ -135,9 +135,9 @@ class References:
     u_dc: float | None = None
 
 
-class CurrentVectorController:
+class OpenLoopController:
     """
-    Current-vector grid-following controller.
+    Current-vector open-loop controller.
 
     Parameters
     ----------
