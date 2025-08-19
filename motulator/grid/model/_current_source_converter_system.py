@@ -1,16 +1,13 @@
 """Continuous-time grid converter system model."""
 
 from motulator.common.model._base import Model
-from motulator.common.model._converter import (
-    CapacitiveDCBusConverter,
-    VoltageSourceConverter,
-)
-from motulator.grid.model._ac_filter import LCLFilter, LFilter
+from motulator.common.model._csc import CurrentSourceConverter
 from motulator.grid.model._ac_source import ThreePhaseSource
+from motulator.grid.model._lc_filter import LCFilter
 
 
 # %%
-class GridConverterSystem(Model):
+class CurrentSourceConverterSystem(Model):
     """
     Continuous-time model for grid-converter systems.
 
@@ -31,8 +28,8 @@ class GridConverterSystem(Model):
 
     def __init__(
         self,
-        converter: (VoltageSourceConverter | CapacitiveDCBusConverter),
-        ac_filter: LFilter | LCLFilter,
+        converter: CurrentSourceConverter,
+        ac_filter: LCFilter,
         ac_source: ThreePhaseSource,
         pwm: bool = False,
         delay: int = 1,

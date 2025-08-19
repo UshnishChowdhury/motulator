@@ -5,10 +5,8 @@ from dataclasses import dataclass
 from math import pi, sqrt
 
 from motulator.common.control._base import TimeSeries
-from motulator.common.control._controllers import ComplexPIController
 from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
-from motulator.grid.control._controllers import CurrentLimiter
 
 
 # %%
@@ -95,34 +93,6 @@ class PLL:
 
 
 # %%
-class CurrentController(ComplexPIController):
-    """
-    2DOF PI current controller for grid converters.
-
-    This class provides an interface for a current controller for grid converters. The
-    gains are initialized based on the desired closed-loop bandwidth and the filter
-    inductance.
-
-    Parameters
-    ----------
-    L : float
-        Inductance (H).
-    alpha_c : float
-        Current-control bandwidth (rad/s).
-    alpha_i : float, optional
-        Integral-action bandwidth (rad/s), defaults to `alpha_c`.
-
-    """
-
-    def __init__(self, L: float, alpha_c: float, alpha_i: float | None = None) -> None:
-        alpha_i = alpha_c if alpha_i is None else alpha_i
-        k_t = alpha_c * L
-        k_i = alpha_c * alpha_i * L
-        k_p = (alpha_c + alpha_i) * L
-        super().__init__(k_p, k_i, k_t)
-
-
-# %%
 @dataclass
 class References:
     """Reference signals for grid-following control."""
@@ -137,18 +107,11 @@ class References:
 
 class OpenLoopController:
     """
-    Current-vector open-loop controller.
+    Open-loop controller.
 
     Parameters
-    ----------
-    i_max : float
-        Maximum current (A), peak value.
-    L : float
-        Filter inductance (H).
-    alpha_c : float, optional
-        Current-control bandwidth (rad/s), defaults to 2*pi*400.
-    alpha_i : float, optional
-        Integral-action bandwidth (rad/s), defaults to `alpha_c`.
+
+        ----------
     u_nom : float, optional
         Nominal grid voltage (V), line-to-neutral peak value, defaults to
         `sqrt(2/3)*400`.
@@ -172,9 +135,9 @@ class OpenLoopController:
         alpha_pll: float = 2 * pi * 20,
         T_s: float = 125e-6,
     ) -> None:
-        self.current_ctrl = CurrentController(L, alpha_c, alpha_i)
+        # self.current_ctrl = CurrentController(L, alpha_c, alpha_i)
         self.pll = PLL(u_nom, w_nom, alpha_pll)
-        self.current_limiter = CurrentLimiter(i_max)
+        # self.current_limiter = CurrentLimiter(i_max)
         self.T_s = T_s
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> PLLOutputSignals:
@@ -190,15 +153,15 @@ class OpenLoopController:
 
         # Compute the reference current
         ref.i_c = (ref.p_g - 1j * ref.q_g) / (1.5 * fbk.u_g)
-        ref.i_c = self.current_limiter(ref.i_c)
+        # ref.i_c = self.current_limiter(ref.i_c)
 
         # Compute the reference voltage
-        ref.u_c = self.current_ctrl.compute_output(ref.i_c, fbk.i_c, fbk.u_g)
+        # ref.u_c = self.current_ctrl.compute_output(ref.i_c, fbk.i_c, fbk.u_g)
         return ref
 
     def update(self, ref: References, fbk: PLLOutputSignals) -> None:
         """Update states."""
-        self.current_ctrl.update(ref.T_s, fbk.u_c, fbk.w_c)
+        # self.current_ctrl.update(ref.T_s, fbk.u_c, fbk.w_c)
         self.pll.update(ref.T_s, fbk)
 
     def post_process(self, ts: TimeSeries) -> None:

@@ -24,13 +24,13 @@ base = utils.BaseValues.from_nominal(nom)
 ac_filter = model.LCFilter(C=0.06 * base.C, L=0.1 * base.L)
 ac_source = model.ThreePhaseSource(w_g=base.w, e_g=base.u)
 converter = model.CurrentSourceConverter(i_dc=4950)
-mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
+mdl = model.CurrentSourceConverterSystem(converter, ac_filter, ac_source)
 
 # %%
 # Configure the control system.
 
-inner_ctrl = control.CurrentVectorController(i_max=1.5 * base.i, L=0.2 * base.L)
-ctrl = control.GridConverterControlSystem(inner_ctrl)
+inner_ctrl = control.OpenLoopController(i_max=1.5 * base.i, L=0.2 * base.L)
+ctrl = control.CurrentSourceConverterControlSystem(inner_ctrl)
 
 # %%
 # Set the time-dependent reference and disturbance signals.

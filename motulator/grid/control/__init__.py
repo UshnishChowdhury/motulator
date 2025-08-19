@@ -1,7 +1,11 @@
 """Controllers for grid converters."""
 
-from motulator.grid.control._base import GridConverterControlSystem
+from motulator.grid.control._base import (
+    CurrentSourceConverterControlSystem,
+    GridConverterControlSystem,
+)
 from motulator.grid.control._controllers import CurrentLimiter, DCBusVoltageController
+from motulator.grid.control._csc_open_loop import OpenLoopController
 from motulator.grid.control._gfl_current_vector import (
     PLL,
     CurrentController,
@@ -19,4 +23,6 @@ __all__ = [
     "ObserverBasedGridFormingController",
     "PLL",
     "PowerSynchronizationController",
+    "OpenLoopController",
+    "CurrentSourceConverterControlSystem",
 ]
