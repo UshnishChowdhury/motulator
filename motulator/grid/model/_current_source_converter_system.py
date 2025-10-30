@@ -13,9 +13,9 @@ class CurrentSourceConverterSystem(Model):
 
     Parameters
     ----------
-    converter : VoltageSourceConverter | CapacitiveDCBusConverter
-        | CurrentSourceConverter Converter model.
-    ac_filter : LFilter | LCLFilter
+    converter : CurrentSourceConverter
+        Converter model.
+    ac_filter : LCFilter
         AC filter model.
     ac_source : ThreePhaseSource
         Three-phase voltage source.
